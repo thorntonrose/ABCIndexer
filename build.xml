@@ -1,0 +1,56 @@
+<!-- AbcIndexer -->
+<project name="AbcIndexer" default="jar">
+   <property name="appTitle"     value="${ant.project.name}" />
+   <property name="appVersion"   value="1.0" />
+   <property name="appPackage"   value="abcindexer" />
+   <property name="appMainClass" value="${appPackage}.AbcIndexer" />
+   <property name="appJar"       value="${ant.project.name}.jar" />
+   <property name="distFile"     value="${ant.project.name}-${appVersion}" />
+   <property name="srcDir"       value="src" />
+   <property name="classesDir"   value="classes" />
+
+   <!-- all -->
+   <target name="all" depends="clean,jar,dist"/>
+
+   <!-- clean -->
+   <target name="clean">
+      <delete dir="${classesDir}" />
+   </target>
+
+   <!-- jar -->
+   <target name="jar" depends="compile">
+      <copy todir="${classesDir}">
+         <fileset dir="${srcDir}">
+            <include name="META-INF/**"/>
+         </fileset>
+         <filterset>
+            <filter token="appTitle"     value="${appTitle}" />
+            <filter token="appVersion"   value="${appVersion}" />
+            <filter token="appVendor"    value="${appVendor}" />
+            <filter token="appMainClass" value="${appMainClass}" />
+         </filterset>
+      </copy>
+
+      <jar destfile="${appJar}"
+           manifest="${classesDir}/META-INF/MANIFEST.MF">
+         <fileset dir="${classesDir}">
+            <include name="**/*.class" />
+         </fileset>
+      </jar>
+   </target>
+
+   <!-- compile -->
+   <target name="compile">
+      <mkdir dir="${classesDir}" />
+      <javac srcdir="${srcDir}" destdir="${classesDir}" />
+   </target>
+
+   <!-- dist -->
+   <target name="dist">
+      <jar destfile="${distFile}" manifest="${classesDir}/META-INF/MANIFEST.MF">
+         <fileset dir="${classesDir}">
+            <include name="**/*.class" />
+         </fileset>
+      </jar>
+   </target>
+</project>
